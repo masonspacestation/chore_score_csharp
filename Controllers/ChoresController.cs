@@ -1,5 +1,7 @@
 
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace chore_score_csharp.Controllers;
 
 
@@ -18,6 +20,20 @@ public class ChoresController : ControllerBase
     _choresService = choresService;
   }
 
+
+  [HttpPost]
+  public ActionResult<Chore> CreateChore([FromBody] Chore choreData)
+  {
+    try
+    {
+      Chore chore = _choresService.CreateChore(choreData);
+      return Ok(chore);
+    }
+    catch (Exception error)
+    {
+      return BadRequest(error.Message);
+    }
+  }
 
 
   [HttpGet]

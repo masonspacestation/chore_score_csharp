@@ -3,6 +3,9 @@
 
 
 
+
+using System.Data.Common;
+
 namespace chore_score_csharp.Repositories;
 
 
@@ -12,6 +15,33 @@ public class ChoresRepository
   public ChoresRepository(IDbConnection db)
   {
     _db = db;
+  }
+
+  internal Chore CreateChore(Chore choreData)
+  {
+    string sql = @"
+INSERT INTO
+chores(name, description, room, isCompleted, assignedTo)
+VALUES(@Name, @Description, @Room, @IsCompleted, @AssignedTo);
+
+SELECT * FROM chores WHERE id = LAST_INSERT_ID();";
+
+    Chore chore = _db.Query<Chore>(sql, choreData).FirstOrDefault();
+
+    return chore;
+
+
+
+    //      string sql = @"
+    // INSERT INTO 
+    // cats(name, age, color, hasPolydactylity) 
+    // VALUES(@Name, @Age, @Color, @HasPolydactylity);
+
+    // SELECT * FROM cats WHERE id = LAST_INSERT_ID();";
+
+    // Cat cat = _db.Query<Cat>(sql, catData).FirstOrDefault(); // return the first row found, or return null
+
+    // return cat;
   }
 
   internal void DestroyChoreById(int choreId)
